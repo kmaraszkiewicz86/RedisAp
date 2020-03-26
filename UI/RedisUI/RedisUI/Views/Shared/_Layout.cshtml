@@ -1,0 +1,31 @@
+﻿<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v3.8.6">
+    <title>Dashboard Template · Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="~/styles/bootstrap.min.css">
+
+    <!-- Custom styles for this template -->
+    <link href="~/styles/main.css" rel="stylesheet">
+    <link href="~/styles/dashboard.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Redis app</a>
+    </nav>
+
+    <div class="container-fluid">
+        @RenderBody()
+    </div>
+
+        <script src="~/scripts/jquery-3.4.1.min.js"></script>
+        <script src="~/scripts/bootstrap.min.js"></script>
+        <script src='~/scripts/knockout-3.5.1.js'></script>
+        <script src="~/app/main.js"></script>
+</body>
+</html>
