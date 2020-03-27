@@ -1,4 +1,7 @@
 
+Common/.vs/
+Common/bin/
+Common/obj/
 Services/RedisFetcherService/.vs/
 Services/RedisFetcherService/RedisFetcherService/bin/
 Services/RedisFetcherService/RedisFetcherService/obj/
