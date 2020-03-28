@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="NHibernate" Version="5.2.7" />
+    <PackageReference Include="StackExchange.Redis.Extensions.Newtonsoft" Version="5.5.0" />
   </ItemGroup>
 
 </Project>

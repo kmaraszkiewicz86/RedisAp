@@ -1,27 +1,16 @@
 var ViewModel = function() {
     self = this;
 
-    self.items = ko.observableArray([]);
-
-    $.getJSON("https://localhost:44317/api/Values", function(allData) {
-        var mappedTasks = $.map(allData, function(item) { return item });
-        self.items(mappedTasks);
-    });  
+    self.movies = ko.observableArray([]);
 
     $.ajax({
-        url: "https://localhost:44317/api/Values",
-     
-        // The name of the callback parameter, as specified by the YQL service
-        jsonp: "callback",
-     
-        // Tell jQuery we're expecting JSONP
-        dataType: "jsonp",
-     
-        // Work with the response
-        success: function( allData ) {
-            var mappedTasks = $.map(allData, function(item) { return item });
-            self.items(mappedTasks);
-        }
+        url: "https://localhost:44317/api/Movies",
+        crossDomain: true,
+        dataType: 'jsonp',
+        method: "GET",
+
+        success: function (data) { console.log(data); },
+        error: function (jqXHR, textStatus, errorThrown) { console.log(errorThrown); console.log(textStatus); }
     });
 };
  

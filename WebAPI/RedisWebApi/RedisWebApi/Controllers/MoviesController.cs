@@ -1,19 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Results;
-using Antlr.Runtime.Misc;
 using Autofac.Features.OwnedInstances;
+using Common;
 using Common.Models;
 using NHibernate;
 
 namespace RedisWebApi.Controllers
 {
+    [EnableCors("*", "*", "*")]
     public class MoviesController : ApiController
     {
-        private readonly Func<Owned<ISession>> _sessionFactory;
+        private readonly Antlr.Runtime.Misc.Func<Owned<ISession>> _sessionFactory;
 
-        public MoviesController(Func<Owned<ISession>> sessionFactory)
+        public MoviesController(Antlr.Runtime.Misc.Func<Owned<ISession>> sessionFactory)
         {
             _sessionFactory = sessionFactory;
         }
@@ -33,18 +36,12 @@ namespace RedisWebApi.Controllers
             }
         }
 
-        public void Post([FromBody]string value)
+        public void Post([FromBody] Movie movie)
         {
-        }
-
-        // PUT: api/Movies/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE: api/Movies/5
-        public void Delete(int id)
-        {
+            RedisManager.OnWork((cacheClient, db) =>
+            {
+                cacheClient.Add(movie.Name, movie, DateTimeOffset.Now.AddMinutes(10));
+            });
         }
     }
 }
