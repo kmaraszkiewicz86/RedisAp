@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http;
-using System.Web.Http.Cors;
-using System.Web.Http.Results;
 using Autofac.Features.OwnedInstances;
 using Common;
 using Common.Models;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using NHibernate;
 
 namespace RedisWebApi.Controllers
 {
-    [EnableCors("*", "*", "*")]
-    public class MoviesController : ApiController
+    [EnableCors]
+    public class MoviesController : ControllerBase
     {
         private readonly Antlr.Runtime.Misc.Func<Owned<ISession>> _sessionFactory;
 
@@ -21,8 +20,8 @@ namespace RedisWebApi.Controllers
             _sessionFactory = sessionFactory;
         }
 
-        // GET: api/Movies
-        public JsonResult<Movie[]> Get()
+        [HttpGet]
+        public ActionResult<Movie[]> Get()
         {
             using (var session = _sessionFactory())
             {
@@ -32,16 +31,17 @@ namespace RedisWebApi.Controllers
                 var movies = session.Value.QueryOver<Movie>()
                     .Left.JoinAlias(x => x.Category, () => categoryAlias);
 
-                return Json(movies.List().ToArray());
+                return Ok(movies.List().ToArray());
             }
         }
 
-        public void Post([FromBody] Movie movie)
+        [HttpPost]
+        public void Save([FromBody] Movie movie)
         {
             RedisManager.OnWork((cacheClient, db) =>
             {
-                cacheClient.Add(movie.Name, movie, DateTimeOffset.Now.AddMinutes(10));
-            });
+                cacheClient.AddAsync(movie.Name, movie, DateTimeOffset.Now.AddMinutes(10)).GetAwaiter().GetResult();
+            }, () => throw new Exception("Connection for redis database failed. Try again later..."));
         }
     }
 }

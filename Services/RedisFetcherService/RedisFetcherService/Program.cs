@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Common;
 using Common.Models;
+using Newtonsoft.Json;
 using NHibernate.Cfg;
 
 namespace RedisFetcherService
@@ -14,45 +14,70 @@ namespace RedisFetcherService
         {
             using (var session = new Configuration().BuildDefaultSession().OpenSession())
             {
-                RedisManager.OnWork((cacheClient, db) =>
+                while (true)
                 {
-                    while (true)
+                    RedisManager.OnWork((cacheClient, db) =>
                     {
-                        try
+                        while (true)
                         {
-                            foreach (var key in cacheClient.SearchKeys("*"))
+                            try
                             {
-                                Console.WriteLine(key);
-                                var items = cacheClient.GetAll<Movie>(new[] { key });
+                                var keys = cacheClient.SearchKeysAsync("*").GetAwaiter().GetResult().ToList();
 
-                                foreach (var item in items)
+                                if (keys.Any())
                                 {
-                                    var movie = new Movie
+                                    foreach (var key in keys)
                                     {
-                                        Name = item.Value.Name,
-                                        Describe = item.Value.Describe
-                                    };
+                                        Console.WriteLine($"Trying to parse {key} data");
 
-                                    movie.Category = session.Query<Category>()
-                                        .FirstOrDefault(c => c.Id == item.Value.Category.Id);
+                                        try
+                                        {
+                                            var items = cacheClient.GetAllAsync<Movie>(new[] { key }).GetAwaiter().GetResult();
+
+                                            foreach (var item in items)
+                                            {
+                                                var movie = new Movie
+                                                {
+                                                    Name = item.Value.Name,
+                                                    Describe = item.Value.Describe
+                                                };
+
+                                                movie.Category = session.Query<Category>()
+                                                    .FirstOrDefault(c => c.Id == item.Value.Category.Id);
 
 
-                                    session.Save(movie);
+                                                session.Save(movie);
+                                            }
+                                        }
+                                        catch (JsonReaderException)
+                                        {
+                                            Console.WriteLine("Data is not compatible, skipping...");
+                                        }
+
+                                        db.KeyDelete(key);
+
+                                    }
                                 }
-                                
-                                db.KeyDelete(key);
+                                else
+                                {
+                                    Console.WriteLine($"{DateTime.Now:HH:mm:ss tt zz} No new keys found");
+                                }
                             }
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e);
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                            }
+
+                            Console.WriteLine($"{DateTime.Now:HH:mm:ss tt zz} Waiting 3 seconds");
+                            Thread.Sleep(3000);
                         }
 
-
-                        Console.WriteLine("Waiting 3 seconds");
+                    }, () =>
+                    {
+                        Console.WriteLine($"{DateTime.Now:HH:mm:ss tt zz} Connection for redis database failed. I am trying to connect again for 3 seconds");
                         Thread.Sleep(3000);
-                    }
-                });
+                    });
+                }
             }
         }
     }

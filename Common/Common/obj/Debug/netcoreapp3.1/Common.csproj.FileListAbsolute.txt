@@ -1,0 +1,8 @@
+E:\Private\RedisAp\Common\Common\bin\Debug\netcoreapp3.1\Common.deps.json
+E:\Private\RedisAp\Common\Common\bin\Debug\netcoreapp3.1\Common.dll
+E:\Private\RedisAp\Common\Common\obj\Debug\netcoreapp3.1\Common.AssemblyInfoInputs.cache
+E:\Private\RedisAp\Common\Common\obj\Debug\netcoreapp3.1\Common.AssemblyInfo.cs
+E:\Private\RedisAp\Common\Common\bin\Debug\netcoreapp3.1\Common.pdb
+E:\Private\RedisAp\Common\Common\obj\Debug\netcoreapp3.1\Common.dll
+E:\Private\RedisAp\Common\Common\obj\Debug\netcoreapp3.1\Common.pdb
+E:\Private\RedisAp\Common\Common\obj\Debug\netcoreapp3.1\Common.csproj.CoreCompileInputs.cache
