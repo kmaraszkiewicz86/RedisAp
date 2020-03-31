@@ -20,7 +20,6 @@ namespace Common.Models
             Property(x => x.Name);
             Property(x => x.Describe);
 
-
             ManyToOne(x => x.Category, map =>
             {
                 map.Column("CategoryId");

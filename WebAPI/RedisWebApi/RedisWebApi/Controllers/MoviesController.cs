@@ -7,10 +7,12 @@ using Common.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using NHibernate;
+using NHibernate.Linq;
 
 namespace RedisWebApi.Controllers
 {
-    [EnableCors]
+    [EnableCors("MyPolicy")]
+    [Route("api/Movies")]
     public class MoviesController : ControllerBase
     {
         private readonly Antlr.Runtime.Misc.Func<Owned<ISession>> _sessionFactory;
@@ -20,8 +22,8 @@ namespace RedisWebApi.Controllers
             _sessionFactory = sessionFactory;
         }
 
-        [HttpGet]
-        public ActionResult<Movie[]> Get()
+        [HttpPost("All")]
+        public ActionResult Get()
         {
             using (var session = _sessionFactory())
             {
@@ -32,6 +34,26 @@ namespace RedisWebApi.Controllers
                     .Left.JoinAlias(x => x.Category, () => categoryAlias);
 
                 return Ok(movies.List().ToArray());
+            }
+        }
+
+        [HttpPost("GetDetails/{id:int}")]
+        public ActionResult GetDetails(int id)
+        {
+            using (var session = _sessionFactory())
+            {
+                IList<Category> categoryAlias = null;
+
+                var movies = session.Value.QueryOver<Movie>()
+                    .Left.JoinAlias(x => x.Category, () => categoryAlias)
+                    .Where(x => x.Id == id)
+                    .OrderBy(m => m.Id)
+                    .Asc
+                    .Take(1)
+                    .List()
+                    .FirstOrDefault();
+
+                return Ok(movies);
             }
         }
 

@@ -6,3 +6,4 @@ E:\Private\RedisAp\Common\Common\bin\Debug\netcoreapp3.1\Common.pdb
 E:\Private\RedisAp\Common\Common\obj\Debug\netcoreapp3.1\Common.dll
 E:\Private\RedisAp\Common\Common\obj\Debug\netcoreapp3.1\Common.pdb
 E:\Private\RedisAp\Common\Common\obj\Debug\netcoreapp3.1\Common.csproj.CoreCompileInputs.cache
+E:\Private\RedisAp\Common\Common\obj\Debug\netcoreapp3.1\Common.csprojAssemblyReference.cache
