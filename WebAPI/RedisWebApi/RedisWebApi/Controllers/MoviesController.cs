@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using NHibernate;
 using NHibernate.Linq;
+using NHibernate.Util;
 
 namespace RedisWebApi.Controllers
 {
@@ -33,7 +34,24 @@ namespace RedisWebApi.Controllers
                 var movies = session.Value.QueryOver<Movie>()
                     .Left.JoinAlias(x => x.Category, () => categoryAlias);
 
-                return Ok(movies.List().ToArray());
+                var moviesResponse = new List<Movie>();
+
+                 foreach (var m in movies.List())
+                 {
+                     moviesResponse.Add(new Movie
+                     {
+                         Id = m.Id,
+                         Describe = m.Describe,
+                         Name = m.Name,
+                         Category = new Category
+                         {
+                             Id = m.Category.Id,
+                             Name = m.Category.Name
+                         }
+                     });
+                 }
+                
+                 return Ok(moviesResponse);
             }
         }
 

@@ -72,8 +72,6 @@ namespace RedisWebApi
             {
                 endpoints.MapControllers();
             });
-            
-            MigratorBuilder.Migrate();
         }
     }
 }
