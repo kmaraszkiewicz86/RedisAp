@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Common.Utils;
 using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Cfg.MappingSchema;
@@ -21,7 +22,7 @@ namespace Common
 
             cfg.DataBaseIntegration(x =>
             {
-                x.ConnectionString = "Server=DESKTOP-NTNHKPL;Database=RedisApp;Trusted_Connection=True;";
+                x.ConnectionString = ConnectionStringUtils.GetDefaultConnectionString();
 
                 x.Driver<SqlClientDriver>();
                 x.Dialect<MsSql2008Dialect>();

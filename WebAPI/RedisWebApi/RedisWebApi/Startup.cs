@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NHibernate;
 using NHibernate.Cfg;
+using RedisWebApi.Migrations;
 
 namespace RedisWebApi
 {
@@ -71,6 +72,8 @@ namespace RedisWebApi
             {
                 endpoints.MapControllers();
             });
+            
+            MigratorBuilder.Migrate();
         }
     }
 }

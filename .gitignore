@@ -19,3 +19,6 @@ WebAPI/RedisWebApi/RedisWebApi.Tests/obj/
 
 UI/RedisUI/RedisUI/RedisUI.csproj.user
 WebAPI/RedisWebApi/RedisWebApi/RedisWebApi.csproj.user
+WebAPI/RedisWebApi/.idea/
+Common/Common/obj/
+Common/Common/bin/
